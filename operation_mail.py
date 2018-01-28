@@ -8,7 +8,7 @@ class OperationMail:
     def download_attach(self):
 
         main_server = imaplib.IMAP4_SSL('imap.gmail.com')
-        main_server.login('boris890221@gmail.com', 'boris1234')
+        main_server.login('user', 'password')
 
         main_server.select('inbox')
 
@@ -52,7 +52,7 @@ class OperationMail:
                     else:
                         file_name += name_str[0]
 
-                with open('/Users/boris/' + file_name, 'wb') as file:
+                with open('path' + file_name, 'wb') as file:
                     file.write(mail_part.get_payload(decode=True))
 
 
