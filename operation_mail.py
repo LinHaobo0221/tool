@@ -23,9 +23,9 @@ class OperationMail:
 
             mail_obj = mail_data_response[0][1]
 
-            mail_body = email.message_from_string(mail_obj.decode('utf-8'))
-            # email.header.decode_header(mail_body.get('Subject'))[0][1] or 'iso-2022-jp'
-
+            mail_body = email.message_from_bytes(mail_obj)
+            
+            # msg_encoding = email.header.decode_header(mail_body.get('Subject'))[0][1] or 'iso-2022-jp'
             # main_body_after_encode = email.message_from_string(mail_obj.decode(msg_encoding))
             # title = ""
             # for sub in email.header.decode_header(main_body_after_encode.get('Subject')):
