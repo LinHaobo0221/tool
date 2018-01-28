@@ -12,7 +12,7 @@ class OperationMail:
 
         main_server.select('inbox')
 
-        result, company_mail_list = main_server.search(None, 'FROM', 'report@tsrs.co.jp')
+        result, company_mail_list = main_server.search(None, 'FROM', 'mail address')
 
         if result == 'OK':
             mail_ids = company_mail_list[0]
