@@ -1,8 +1,8 @@
 #!/bin/sh
 
 #共通環境変数読み込み
-CURRENT=/home/oracle/IKOU
-. $CURRENT/00_com/00_config/COMMON.sh
+CURRENT=/home
+. $CURRENT/COMMON.sh
 
 # ファイル格納場所定義
 
