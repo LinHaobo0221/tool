@@ -1,12 +1,13 @@
-CREATE OR REPLACE PROCEDURE SPL_PROC(limit_count IN NUMBER DEFAULT 5000) 
+CREATE OR REPLACE PROCEDURE SPL_WK_PROC(limit_count IN NUMBER DEFAULT 5000) 
 IS  
     outputpath VARCHAR2(100 char) := 'outputpath';
     
+    --cursor for get data from wk_16_edit_koubai
     TYPE rows_cursor IS REF CURSOR;
     row_cursor rows_cursor;
     
     --data table
-    TYPE edit_row_cursor_table is TABLE OF YOUR_TABLE%ROWTYPE;
+    TYPE edit_row_cursor_table is TABLE OF {table_name}%ROWTYPE;
     edit_row_table edit_row_cursor_table;
     
     --Oracleファイルオブジェクト初期化
@@ -16,7 +17,8 @@ IS
      
     ERROR_MSG VARCHAR2(5 CHAR) := 'ERROR';
      
-    normal_file_name VARCHAR2(100 CHAR) := 'RST.tsv'; 
+    normal_file_name VARCHAR2(100 CHAR) := '*****'; 
+    validate_error_file_name VARCHAR2(100 CHAR) := '*****';
     
     temp_error_message VARCHAR2(32767 CHAR) := '';
     
@@ -25,47 +27,34 @@ IS
     
 BEGIN
      
-     EXECUTE IMMEDIATE 'TRUNCATE TABLE TABLE_NAME';
+     EXECUTE IMMEDIATE 'TRUNCATE TABLE table name';
     
-     OPEN row_cursor FOR SELECT * FROM YOUR_TABLE;
+     OPEN row_cursor FOR SELECT * FROM dual temp_table;
      LOOP
       FETCH row_cursor BULK COLLECT INTO edit_row_table LIMIT limit_count ;
         EXIT WHEN edit_row_table.COUNT = 0;
         
         FORALL indx in edit_row_table.FIRST .. edit_row_table.LAST
-          INSERT INTO YOUR_TABLE VALUES edit_row_table(indx);
+          INSERT INTO table_name VALUES edit_row_table(indx);
         COMMIT;
-        
-        FOR indx in edit_row_table.FIRST .. edit_row_table.LAST LOOP
           
-          IF edit_row_table(indx).ITEM_XXX = ERROR_MSG THEN
-           temp_error_message := temp_error_message || 'XXXXXXXXXXXXXX,';
-          END IF;
-          
-          IF temp_error_message IS NOT NULL THEN
-           UPDATE TABLE_NAME SET ERROR_FLAG = 'ERROR', ERROR_MESSAGE = temp_error_message
-           WHERE ITEM_001 = edit_row_table(indx).ITEM_XXX;
-         END IF;
-           temp_error_message := '';
-       END LOOP;    
       COMMIT; 
     END LOOP;
     CLOSE row_cursor;
     
     --FILE OUTPUT
-    OPEN row_cursor FOR SELECT * FROM WK_16_EDIT_KOUBAI WHERE ERROR_FLAG IS NULL ORDER BY ITEM_001;
+    OPEN row_cursor FOR SELECT * FROM WK_16_EDIT_KOUBAI WHERE ERROR_FLAG IS NULL ORDER BY ITEM_001, ITEM_077;
     normal_result_file := UTL_FILE.FOPEN(UPPER(outputpath), normal_file_name, 'w', 32767);
     LOOP
       FETCH row_cursor BULK COLLECT INTO edit_row_table LIMIT limit_count;
       EXIT WHEN edit_row_table.COUNT = 0;
         FOR indx IN edit_row_table.FIRST .. edit_row_table.LAST LOOP 
-          outputContent := edit_row_table(indx).ITEM_XXX;
-          UTL_FILE.PUT_LINE(normal_result_file, outputContent);
+          UTL_FILE.PUT_LINE(validate_error_file, '');
           outputContent := '';
         END LOOP;
     END LOOP;
    CLOSE row_cursor;
-   UTL_FILE.FCLOSE(normal_result_file);
+   UTL_FILE.FCLOSE(validate_error_file);
    
     --異常処理
     EXCEPTION

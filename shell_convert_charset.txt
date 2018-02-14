@@ -1,0 +1,6 @@
+#both SHIFT-JIS and CP932 can translate japanese , but CP932 is more better.
+#SHIFT-JIS can not translate some kanji, but cp932 can do that
+
+iconv -f UTF-8 -t SHIFT-JIS aaa.csv | sed $'s/$/\r/' > bbb.csv
+
+iconv -f UTF-8 -t CP932 < aaa.csv | sed $'s/$/\r/' > bbb.csv
