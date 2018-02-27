@@ -4,7 +4,7 @@
 CURRENT=/home/oracle/IKOU
 . $CURRENT/00_com/00_config/COMMON.sh
 
-FILES=`cat $IKOU_02_PROC_LST  | grep $1`;
+FILES=`cat $PROC_LST  | grep $1`;
 
 PROC_LOGS='proc_logs'
   
@@ -20,9 +20,9 @@ do
   
   IFS=$OLDIFS
   
-  sourceFile=$IKOU_02_SQL/${fileInfoArrays[0]}
+  sourceFile=$SQL/${fileInfoArrays[0]}
   
-  logsFolder=$IKOU_02_LOG/$PROC_LOGS
+  logsFolder=$LOG/$PROC_LOGS
   
   mkdir -p $logsFolder
   
@@ -40,9 +40,9 @@ do
   
 EOF
  
- result_list=`ls $IKOU_02_OUTPUT -p | grep -v / | grep ${fileName}`
+ result_list=`ls $OUTPUT -p | grep -v / | grep ${fileName}`
  
- tempFolder=$IKOU_02_OUTPUT/${fileName}_temp
+ tempFolder=$OUTPUT/${fileName}_temp
  
  mkdir -p $tempFolder
  
@@ -51,7 +51,7 @@ EOF
  for result_file in ${result_list[@]}
  
  do
-   mv $IKOU_02_OUTPUT/$result_file /$tempFolder
+   mv $OUTPUT/$result_file /$tempFolder
  
  done;
  
@@ -61,7 +61,7 @@ EOF
  
  do
  
-  iconv -f UTF-8 -t CP932 $tempFolder/$transfer_file | sed $'s/$/\r/' > $IKOU_02_OUTPUT/$transfer_file
+  iconv -f UTF-8 -t CP932 $tempFolder/$transfer_file | sed $'s/$/\r/' > $OUTPUT/$transfer_file
  
  done;
 
